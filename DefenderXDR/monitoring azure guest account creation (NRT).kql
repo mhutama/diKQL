@@ -1,0 +1,7 @@
+CloudAppEvents
+| extend ObjectId=tostring(parse_json(RawEventData).["ObjectId"])
+| where ActionType has "Add user." and ObjectId endswith "#EXT#@ecco.onmicrosoft.com"
+| extend AccountEvent = strcat(ActionType, " in ", Application)
+| extend InvitedDomain = extract("_([^@]+)#EXT", 1, ObjectId)
+| project Timestamp, AccountEvent, InvitedAccount=ObjectId, InvitedDomain, RequestorAccount=AccountDisplayName, AccountObjectId, AccountType, ReportId
+| sort by Timestamp desc
