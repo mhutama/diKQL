@@ -1,0 +1,15 @@
+DeviceProcessEvents
+| where InitiatingProcessAccountName !in ("system", "local service")
+| where InitiatingProcessVersionInfoCompanyName contains @"Portable" and InitiatingProcessVersionInfoCompanyName != ""
+| where not(FolderPath startswith @"c:\program files\" or FolderPath startswith @"c:\program files (x86)\" 
+or FolderPath startswith @"C:\Windows\System32" or FolderPath startswith @"C:\ProgramData\")
+or FolderPath contains @"Portable" or FolderPath contains @"Downloads"
+or FolderPath contains @"Private" or FolderPath contains @"App" or FolderPath contains @"Soft" 
+or FolderPath contains @"Tool" or FolderPath contains "_" or FolderPath contains "-"
+or FolderPath matches regex @"[c-z]:\\tmp\\"
+| join kind=inner (DeviceInfo | project DeviceId, OSPlatform, OSBuild, OSVersionInfo) on DeviceId
+| summarize arg_max(Timestamp, *) by DeviceName, FileName
+| where OSPlatform contains "Windows"
+| extend OSInfo = strcat(OSPlatform, " Version ", OSVersionInfo, " Build ", OSBuild)
+| project Timestamp, DeviceName, OSInfo, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessVersionInfoCompanyName, SHA256, ProcessCommandLine, AdditionalFields, DeviceId, ReportId
+| order by Timestamp desc
