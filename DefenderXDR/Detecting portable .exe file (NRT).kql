@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where InitiatingProcessVersionInfoCompanyName has "portable" or FolderPath has @"portable"
+| where FolderPath !contains "/"
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessVersionInfoCompanyName, SHA256, InitiatingProcessAccountName, ProcessCommandLine, DeviceId, ReportId
+| order by Timestamp desc
