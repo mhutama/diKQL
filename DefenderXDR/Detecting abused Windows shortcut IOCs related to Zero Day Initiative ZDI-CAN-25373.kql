@@ -1,0 +1,9 @@
+let ZeroDayInitiativeCAN25373 = externaldata(SHA256IOC: string)
+["https://www.trendmicro.com/content/dam/trendmicro/global/en/research/25/c/zdi-can-25373-windows-shortcut-exploit-abused-as-zero-day-in-widespread-apt-campaigns/IOCs_ZDI-CAN-25373.txt"] with (format="txt", ignoreFirstRecord=True);
+let SHA256Regex = '[a-fA-F0-9]{64}';
+let MaliciousSHA256 = materialize (ZeroDayInitiativeCAN25373 
+| where SHA256IOC matches regex SHA256Regex | distinct SHA256IOC);
+DeviceFileEvents
+| where SHA256 has_any (MaliciousSHA256)
+
+//refer : https://medium.com/@mhutama/detecting-abused-windows-shortcut-iocs-related-to-zero-day-initiative-zdi-can-25373-7faff2e25829 
