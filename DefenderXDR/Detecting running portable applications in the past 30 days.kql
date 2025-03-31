@@ -1,4 +1,5 @@
 DeviceProcessEvents
+| where Timestamp >= ago(30d)
 | where InitiatingProcessAccountName !in ("system", "local service")
 | where InitiatingProcessVersionInfoCompanyName contains @"Portable" and InitiatingProcessVersionInfoCompanyName != ""
 | where not(FolderPath startswith @"c:\program files\" or FolderPath startswith @"c:\program files (x86)\" 
