@@ -1,5 +1,12 @@
 DeviceProcessEvents
 | where InitiatingProcessVersionInfoCompanyName has "portable" or FolderPath has @"portable"
 | where FolderPath !contains "/"
+| where InitiatingProcessAccountName !in ("system", "local service")
+| where not(FolderPath startswith @"c:\program files\" or FolderPath startswith @"c:\program files (x86)\" 
+or FolderPath startswith @"C:\Windows\System32" or FolderPath startswith @"C:\ProgramData\")
+or FolderPath !contains "/" or FolderPath contains @"Portable" or FolderPath contains @"Downloads"
+or FolderPath contains @"Private" or FolderPath contains @"App" or FolderPath contains @"Soft" 
+or FolderPath contains @"Tool" or FolderPath contains "_" or FolderPath contains "-"
+or FolderPath matches regex @"[c-z]:\\tmp\\"
 | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessVersionInfoCompanyName, SHA256, InitiatingProcessAccountName, ProcessCommandLine, DeviceId, ReportId
 | order by Timestamp desc
