@@ -2,5 +2,5 @@ DeviceProcessEvents
 | where DeviceName contains "MAC-" // you can adjust this, depend on naming patern
 | where InitiatingProcessFolderPath has "/usr/bin/sudo"
 | where ProcessCommandLine has_any ("sudo spctl --master-disable","sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 0")
-| project Timestamp, DeviceName, AccountUpn, ProcessCommandLine, InitiatingProcessFolderPath, ActionType,AccountName,AccountSid,FileName, FolderPath, SHA256, AdditionalFields, AccountSid, DeviceId, ReportId
+| project Timestamp, DeviceName, AccountUpn, ProcessCommandLine, InitiatingProcessFolderPath, ActionType,AccountName,FileName, FolderPath, SHA256, AdditionalFields, AccountSid, DeviceId, ReportId
 | sort by Timestamp desc 
